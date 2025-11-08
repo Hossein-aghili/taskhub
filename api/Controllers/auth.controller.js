@@ -1,8 +1,8 @@
-import { HandleERROR } from "vanta-api";
+import { catchAsync, HandleERROR } from "vanta-api";
 import User from "../Models/user.model.js";
-import { catchAsync } from './../node_modules/vanta-api/src/catchAsync';
 import bcryptjs from "bcryptjs";
-export const regiter = catchAsync(async (req, res, next) => {
+import jwt from "jsonwebtoken";
+export const register = catchAsync(async (req, res, next) => {
     const { password = null, role = null, ...others } = req.body
     if (!password) {
         return next(new HandleERROR('password or username is required'))
