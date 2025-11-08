@@ -46,10 +46,12 @@ export const update = catchAsync(async (req, res, next) => {
     if (req.role !== "admin" && task.userId.toString() !== req.userId.toString()) {
         return next(new HandleERROR("شما اجازه دسترسی به این را ندارید", 401))
     }
-    const task = await Task.findByIdAndUpdate(id, req.body, { new: true, runValidators: true })
+    const task = await Task.findById(id)
     if (!task) {
         return next(new HandleERROR('تسک مورد نظر یافت نشد'))
     }
+    const updateTask = await Task.findByIdAndUpdate(id, req.body, { new: true, runValidators: true })
+
     return res.status(200).json({
         success: true,
         data: user,
