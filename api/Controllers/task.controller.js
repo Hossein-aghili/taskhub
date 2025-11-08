@@ -43,15 +43,26 @@ export const getOne = catchAsync(async (req, res, next) => {
 
 export const update = catchAsync(async (req, res, next) => {
     const { id } = req.params
+    if (req.role !== "admin" && task.userId.toString() !== req.userId.toString()) {
+        return next(new HandleERROR("شما اجازه دسترسی به این را ندارید", 401))
+    }
     const task = await Task.findByIdAndUpdate(id, req.body, { new: true, runValidators: true })
     if (!task) {
         return next(new HandleERROR('تسک مورد نظر یافت نشد'))
-    }
-    if (req.role !== 'admin' && task.userId.toString() !== req.userId.toString()) {
-        return next(new HandleERROR("شما اجازه دسترسی به این را ندارید", 401))
     }
     return res.status(200).json({
         success: true,
         data: user,
     })
+})
+export const remove = catchAsync(async (req, res, next) => {
+    const { id } = req.params
+    if (req.role !== "admin" && task.userId.toString() !== req.userId.toString()) {
+        return next(new HandleERROR("شما اجازه دسترسی به این را ندارید", 401))
+    }
+    await Task.findByIdAndDelete(id)
+    return res.status(200).json({
+        success: true,
+        message: "تسک با موفقیت حذف شد",
+    });
 })
